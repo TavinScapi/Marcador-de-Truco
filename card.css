@@ -3,10 +3,10 @@
 }
 
 :root {
-    --darkBg: #ffcc33;
-    --lightBg: #fff3ce;
+    --darkBg: #ff0000;
+    --lightBg: #ffffff;
     --darkRed: #e22929;
-    --lightRed: #ffd0d0;
+    --lightRed: #ff0000;
     --darkBlack: #000;
     --lightBlack: #777;
 }
@@ -22,22 +22,12 @@ body {
     margin: 0;
 }
 
-.cards {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    margin: 24px auto;
-    perspective: 1000px;
-}
-
 .card {
     display: block;
     width: 150px;
     height: 200px;
     margin: 12px;
     position: relative;
-    cursor: pointer;
 }
 
 .front,

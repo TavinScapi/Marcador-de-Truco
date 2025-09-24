@@ -1,11 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Elementos do DOM
-    const team1 = document.getElementById('team1');
-    const team2 = document.getElementById('team2');
-    const score1 = document.getElementById('score1');
-    const score2 = document.getElementById('score2');
-    const trucoStatus1 = document.getElementById('trucoStatus1');
-    const trucoStatus2 = document.getElementById('trucoStatus2');
+    // Elementos
+    const score1Els = document.querySelectorAll('.score1');
+    const score2Els = document.querySelectorAll('.score2');
     const victories1 = document.getElementById('victories1');
     const victories2 = document.getElementById('victories2');
     const victoryModal = document.getElementById('victoryModal');
@@ -13,104 +9,129 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeVictory = document.getElementById('closeVictory');
     const resetPointsBtn = document.getElementById('resetPoints');
     const resetVictoriesBtn = document.getElementById('resetVictories');
-    const editIcons = document.querySelectorAll('.edit-icon');
-
-    // Estado do jogo
-    let scores = {
-        team1: 0,
-        team2: 0
-    };
-
-    let victories = {
-        team1: 0,
-        team2: 0
-    };
-
-    const trucoValues = [3, 6, 9, 12];
-    let trucoIndex = 0;
-    let trucoAtivo = false;
-    let valorMarcador = 1;
-
     const mainTrucoBtn = document.getElementById('mainTrucoBtn');
     const runBtn = document.getElementById('runBtn');
+    const resetTrucoBtn = document.getElementById('resetTrucoBtn');
+    const trucoStatus1 = document.getElementById('trucoStatus1');
+    const trucoStatus2 = document.getElementById('trucoStatus2');
+    const editIcons = document.querySelectorAll('.edit-icon');
 
-    // Sequência dos naipes para as cartas dos times
+    // Estado
+    let scores = { team1: 0, team2: 0 };
+    let victories = { team1: 0, team2: 0 };
+    let naipeIndex = { team1: 0, team2: 0 };
     const naipes = ['diamond', 'spade', 'heart', 'club'];
-    let naipeIndex = {
-        team1: 0,
-        team2: 0
-    };
+    let trucoAtivo = false;
+    let trucoIndex = 0;
+    const trucoValues = [3, 6, 9, 12];
+    let valorMarcador = 1;
 
-    // Função para atualizar texto dos botões +1
+    // Utilitários
     function atualizarMarcadores() {
         document.querySelectorAll('.increase-btn').forEach(btn => {
             btn.textContent = `+${valorMarcador}`;
         });
+        // Mostrar botão "Voltar ao 1" se truco estiver em 12
+        resetTrucoBtn.style.display = (trucoAtivo && valorMarcador === 12) ? 'inline-block' : 'none';
     }
 
-    // Função para iniciar rodada de truco
+    function atualizarPlacar() {
+        score1Els.forEach(el => el.textContent = scores.team1);
+        score2Els.forEach(el => el.textContent = scores.team2);
+        // Desabilita Truco se algum time chegar a 11
+        if (scores.team1 >= 11 || scores.team2 >= 11) {
+            mainTrucoBtn.disabled = true;
+        } else {
+            mainTrucoBtn.disabled = false;
+        }
+    }
+
+    function atualizarVitorias() {
+        victories1.querySelectorAll('.victory-card').forEach((el, i) => {
+            el.classList.toggle('active', i < victories.team1);
+        });
+        victories2.querySelectorAll('.victory-card').forEach((el, i) => {
+            el.classList.toggle('active', i < victories.team2);
+        });
+    }
+
+    function resetarRodada() {
+        scores.team1 = 0;
+        scores.team2 = 0;
+        atualizarPlacar();
+        trucoAtivo = false;
+        valorMarcador = 1;
+        atualizarMarcadores();
+        mainTrucoBtn.textContent = 'Truco';
+        runBtn.style.display = 'none';
+        trucoStatus1.textContent = '';
+        trucoStatus2.textContent = '';
+    }
+
+    function isVictoryModalOpen() {
+        return victoryModal.classList.contains('active');
+    }
+
+    function flipCard(team) {
+        const card = document.querySelector(`#${team} .card`);
+        card.classList.add('flip');
+        setTimeout(() => {
+            card.classList.remove('flip');
+        }, 500); // tempo igual ao transition do CSS
+    }
+
+    // Pontuação
+    document.querySelectorAll('.increase-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            if (isVictoryModalOpen()) return;
+            const team = this.closest('.team').id === 'team1' ? 'team1' : 'team2';
+            flipCard(team); // flip ao adicionar ponto
+            setTimeout(() => {
+                scores[team] += valorMarcador;
+                if (scores[team] >= 12) {
+                    scores[team] = 12;
+                    mostrarVitoria(team);
+                }
+                atualizarPlacar();
+                if (trucoAtivo) resetarRodada();
+            }, 500); // Atualiza após o flip
+        });
+    });
+
+    document.querySelectorAll('.decrease-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            if (isVictoryModalOpen()) return;
+            const team = this.closest('.team').id === 'team1' ? 'team1' : 'team2';
+            flipCard(team); // flip ao remover ponto
+            setTimeout(() => {
+                scores[team] = Math.max(0, scores[team] - 1);
+                atualizarPlacar();
+            }, 500);
+        });
+    });
+
+    // Truco
     mainTrucoBtn.addEventListener('click', function () {
-        const banner = document.getElementById('trucoBanner');
-        const bannerText = document.getElementById('trucoBannerText');
-        let texto = '';
         if (!trucoAtivo) {
             trucoAtivo = true;
             trucoIndex = 0;
             valorMarcador = trucoValues[trucoIndex];
             atualizarMarcadores();
-            mainTrucoBtn.textContent = trucoValues[trucoIndex + 1] ? trucoValues[trucoIndex + 1] : 'Truco';
+            mainTrucoBtn.textContent = trucoValues[trucoIndex + 1] || 'Truco';
             runBtn.style.display = 'inline-block';
             trucoStatus1.textContent = 'Rodada de Truco!';
             trucoStatus2.textContent = 'Rodada de Truco!';
-            texto = 'TRUCO!';
         } else if (trucoIndex < trucoValues.length - 1) {
             trucoIndex++;
             valorMarcador = trucoValues[trucoIndex];
-            mainTrucoBtn.textContent = trucoValues[trucoIndex + 1] ? trucoValues[trucoIndex + 1] : trucoValues[trucoIndex];
+            mainTrucoBtn.textContent = trucoValues[trucoIndex + 1] || trucoValues[trucoIndex];
             atualizarMarcadores();
-            if (trucoIndex === 1) texto = 'SEIS!';
-            else if (trucoIndex === 2) texto = 'NOVE!';
-            else if (trucoIndex === 3) texto = 'DOZE!';
         }
-        // Mostra banner se for pedido novo
-        if (texto) {
-            bannerText.textContent = texto;
-            banner.style.display = 'block';
-            banner.style.animation = 'none';
-            void banner.offsetWidth; // reinicia animação
-            banner.style.animation = '';
-
-            // Confetes animados
-            for (let i = 0; i < 25; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('truco-particle');
-                // cores variadas
-                particle.style.background = ['#f1c40f', '#e67e22', '#e74c3c'][Math.floor(Math.random() * 3)];
-                particle.style.left = `${50 + (Math.random() * 40 - 20)}%`;
-                particle.style.top = `40px`;
-                particle.style.transform = `translateX(-50%)`;
-                particle.style.animationDelay = `${Math.random() * 0.3}s`;
-                particle.style.animationDuration = `${0.8 + Math.random() * 0.5}s`;
-                document.body.appendChild(particle);
-                // remover depois da animação
-                setTimeout(() => particle.remove(), 1500);
-            }
-
-            setTimeout(() => {
-                banner.style.display = 'none';
-            }, 1500);
-        }
-
     });
 
-    // Botão de correr
-    runBtn.addEventListener('click', function () {
-        // Quem clicar, o adversário ganha os pontos anteriores
-        const runValue = trucoIndex > 0 ? trucoValues[trucoIndex - 1] : 1;
-        // Você pode escolher qual time ganha, aqui exemplo: Time 1 ganha
-        updateScore(1, scores.team1 + runValue, 'increase');
-        // Resetar truco
+    resetTrucoBtn.addEventListener('click', function () {
         trucoAtivo = false;
+        trucoIndex = 0;
         valorMarcador = 1;
         atualizarMarcadores();
         mainTrucoBtn.textContent = 'Truco';
@@ -119,161 +140,53 @@ document.addEventListener('DOMContentLoaded', function () {
         trucoStatus2.textContent = '';
     });
 
-    // Função para atualizar a pontuação na tela (para time 1 com flip sincronizado)
-    function updateScore(team, newScore, animation) {
-        if (team === 1) {
-            const scoreElements = document.querySelectorAll('.score1');
-            // Flip primeiro
-            animateCardFlip('team1');
-            // Só troca o número após 250ms (meio do flip)
-            setTimeout(() => {
-                scores.team1 = newScore;
-                scoreElements.forEach(el => el.textContent = newScore);
-            }, 250);
-        } else {
-            // Time 2 (mantém como estava)
-            scores.team2 = newScore;
-            score2.textContent = newScore;
+    runBtn.addEventListener('click', function () {
+        scores.team2 += trucoIndex > 0 ? trucoValues[trucoIndex - 1] : 1;
+        if (scores.team2 >= 12) {
+            scores.team2 = 12;
+            mostrarVitoria('team2');
         }
+        atualizarPlacar();
+        resetarRodada();
+    });
 
-        // Verificar vitória
-        if (newScore >= 12) {
-            showVictory(team);
-        }
+    // Vitória
+    function mostrarVitoria(team) {
+        setTimeout(() => {
+            resetarRodada();
+        }, 500);
 
-        // Atualizar destaque do time ativo
-        highlightActiveTeam();
-    }
-
-    // Função para mostrar modal de vitória
-    function showVictory(winningTeam) {
-        const teamName = document.querySelector(`#team${winningTeam} .team-name`).value;
+        const teamName = document.querySelector(`#${team} .team-name`).value;
         victoryTeamName.textContent = teamName;
         victoryModal.classList.add('active');
+        victories[team]++;
+        atualizarVitorias();
 
-        // Atualizar vitórias
-        victories[`team${winningTeam}`]++;
-        updateVictoriesDisplay();
-
-        // Trocar o naipe da carta do time vencedor
-        const card = document.querySelector(`#team${winningTeam} .card`);
-        card.classList.remove('diamond', 'spade', 'heart', 'club');
-        naipeIndex[`team${winningTeam}`] = (naipeIndex[`team${winningTeam}`] + 1) % naipes.length;
-        card.classList.add(naipes[naipeIndex[`team${winningTeam}`]]);
-
-        // Zerar pontos corretamente
-        scores.team1 = 0;
-        scores.team2 = 0;
-        document.querySelectorAll('.score1').forEach(el => el.textContent = '0');
-        score2.textContent = '0';
+        // Troca naipe da carta
+        const card = document.querySelector(`#${team} .card`);
+        card.classList.remove(...naipes);
+        naipeIndex[team] = (naipeIndex[team] + 1) % naipes.length;
+        card.classList.add(naipes[naipeIndex[team]]);
     }
 
-    // Função para atualizar a exibição das vitórias
-    function updateVictoriesDisplay() {
-        const stars1 = victories1.querySelectorAll('.victory-star');
-        const stars2 = victories2.querySelectorAll('.victory-star');
-
-        stars1.forEach((star, index) => {
-            star.classList.toggle('active', index < victories.team1);
-        });
-
-        stars2.forEach((star, index) => {
-            star.classList.toggle('active', index < victories.team2);
-        });
-    }
-
-    // Função para aumentar pontos
-    function increasePoints(team) {
-        const newScore = scores[`team${team}`] + 1;
-        if (newScore <= 12) {
-            updateScore(team, newScore, 'increase');
-        }
-    }
-
-    // Função para diminuir pontos
-    function decreasePoints(team) {
-        const newScore = Math.max(0, scores[`team${team}`] - 1);
-        updateScore(team, newScore, 'decrease');
-    }
-
-    // Função para destacar time ativo (com mais pontos)
-    function highlightActiveTeam() {
-        if (scores.team1 > scores.team2) {
-            team1.classList.add('active');
-            team2.classList.remove('active');
-        } else if (scores.team2 > scores.team1) {
-            team2.classList.add('active');
-            team1.classList.remove('active');
-        } else {
-            team1.classList.remove('active');
-            team2.classList.remove('active');
-        }
-    }
-
-    // Função para animar o flip do cartão
-    function animateCardFlip(teamId) {
-        const card = document.querySelector(`#${teamId} .card`);
-        card.classList.add('flip');
-        setTimeout(() => {
-            card.classList.remove('flip');
-        }, 500); // tempo igual ao transition do CSS
-    }
-
-    // Event Listeners
-    // Aumentar pontos
-    document.querySelectorAll('.increase-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const team = this.closest('.team').id === 'team1' ? 1 : 2;
-            const newScore = scores[`team${team}`] + valorMarcador;
-            if (newScore <= 12) {
-                updateScore(team, newScore, 'increase');
-                // Após aumentar, se truco estava ativo, volta ao normal
-                if (trucoAtivo) {
-                    trucoAtivo = false;
-                    valorMarcador = 1;
-                    atualizarMarcadores();
-                    mainTrucoBtn.textContent = 'Truco';
-                    runBtn.style.display = 'none';
-                    trucoStatus1.textContent = '';
-                    trucoStatus2.textContent = '';
-                }
-                // Animar flip do cartão
-                animateCardFlip(`team${team}`);
-            }
-        });
-    });
-
-    // Diminuir pontos
-    document.querySelectorAll('.decrease-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const team = this.closest('.team').id === 'team1' ? 1 : 2;
-            decreasePoints(team);
-        });
-    });
-
-    // Fechar modal de vitória
-    closeVictory.addEventListener('click', function () {
+    closeVictory.addEventListener('click', () => {
         victoryModal.classList.remove('active');
+        resetarRodada();
+    });
+    victoryModal.addEventListener('click', e => {
+        if (e.target === victoryModal) {
+            victoryModal.classList.remove('active');
+            resetarRodada();
+        }
     });
 
-    // Zerar pontos
-    resetPointsBtn.addEventListener('click', function () {
-        scores.team1 = 0;
-        scores.team2 = 0;
-        // Atualiza todos os elementos de pontuação do time 1
-        document.querySelectorAll('.score1').forEach(el => el.textContent = '0');
-        // Atualiza o time 2 normalmente
-        score2.textContent = '0';
-        // Atualizar destaque
-        highlightActiveTeam();
-    });
+    // Reset
+    resetPointsBtn.addEventListener('click', resetarRodada);
 
-    // Zerar vitórias
     resetVictoriesBtn.addEventListener('click', function () {
         victories.team1 = 0;
         victories.team2 = 0;
-        updateVictoriesDisplay();
-        // Resetar naipes das cartas
+        atualizarVitorias();
         naipeIndex.team1 = 0;
         naipeIndex.team2 = 0;
         document.querySelector('#team1 .card').classList.remove('spade', 'heart', 'club');
@@ -282,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('#team2 .card').classList.add('diamond');
     });
 
-    // Ícones de edição
+    // Editar nome do time
     editIcons.forEach(icon => {
         icon.addEventListener('click', function () {
             const input = this.previousElementSibling;
@@ -291,13 +204,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Fechar modal de vitória ao clicar fora
-    victoryModal.addEventListener('click', function (e) {
-        if (e.target === victoryModal) {
-            victoryModal.classList.remove('active');
-        }
-    });
-
-    // Inicializar destaque do time ativo
-    highlightActiveTeam();
+    // Inicialização
+    atualizarMarcadores();
+    atualizarPlacar();
+    atualizarVitorias();
 });
