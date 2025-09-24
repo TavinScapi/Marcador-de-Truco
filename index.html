@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcador de Truco Paulista</title>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Banner de Truco -->
+    <div id="trucoBanner" style="display:none;">
+        <span id="trucoBannerText"></span>
+    </div>
+    <!-- ...existing code... -->
+    <div class="container">
+        <header>
+            <h1>TRUCO PAULISTA</h1>
+            <p class="subtitle">Marcador de pontos</p>
+        </header>
+
+        <div class="teams-container">
+            <div class="team" id="team1">
+                <div class="team-header">
+                    <input type="text" class="team-name" value="Time 1" maxlength="15">
+                    <span class="edit-icon">✏️</span>
+                </div>
+                <div class="score" id="score1">0</div>
+                <div class="controls">
+                    <button class="decrease-btn">-1</button>
+                    <button class="increase-btn">+1</button>
+                </div>
+                <div class="truco-status" id="trucoStatus1"></div>
+                <div class="victories" id="victories1">
+                    <span class="victory-star">★</span>
+                    <span class="victory-star">★</span>
+                    <span class="victory-star">★</span>
+                </div>
+            </div>
+
+            <div class="team" id="team2">
+                <div class="team-header">
+                    <input type="text" class="team-name" value="Time 2" maxlength="15">
+                    <span class="edit-icon">✏️</span>
+                </div>
+                <div class="score" id="score2">0</div>
+                <div class="controls">
+                    <button class="decrease-btn">-1</button>
+                    <button class="increase-btn">+1</button>
+                </div>
+                <div class="truco-status" id="trucoStatus2"></div>
+                <div class="victories" id="victories2">
+                    <span class="victory-star">★</span>
+                    <span class="victory-star">★</span>
+                    <span class="victory-star">★</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="trucoActions" style="margin: 20px auto; display: flex; gap: 10px; justify-content: center;">
+            <button class="truco-btn" id="mainTrucoBtn" style="width: 120px;">Truco</button>
+            <button class="truco-btn" id="runBtn"
+                style="width: 120px; background: #e74c3c; color: #fff; display: none;">Correr</button>
+        </div>
+
+        <div class="reset-container">
+            <button class="reset-btn" id="resetPoints">Zerar Pontos</button>
+            <button class="reset-btn" id="resetVictories">Zerar Vitórias</button>
+        </div>
+    </div>
+
+    <div class="victory-modal" id="victoryModal">
+        <div class="victory-content">
+            <h2 class="victory-title">VITÓRIA!</h2>
+            <div class="victory-team" id="victoryTeamName">Time Vencedor</div>
+            <button class="close-victory" id="closeVictory">Fechar</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>Marcador de Truco Paulista</p>
+    </footer>
+</body>
+
+</html>
