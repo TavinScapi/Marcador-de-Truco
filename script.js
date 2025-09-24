@@ -34,6 +34,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const mainTrucoBtn = document.getElementById('mainTrucoBtn');
     const runBtn = document.getElementById('runBtn');
 
+    // Sequência dos naipes para as cartas dos times
+    const naipes = ['diamond', 'spade', 'heart', 'club'];
+    let naipeIndex = {
+        team1: 0,
+        team2: 0
+    };
+
     // Função para atualizar texto dos botões +1
     function atualizarMarcadores() {
         document.querySelectorAll('.increase-btn').forEach(btn => {
@@ -112,22 +119,21 @@ document.addEventListener('DOMContentLoaded', function () {
         trucoStatus2.textContent = '';
     });
 
-    // Função para atualizar a pontuação na tela
+    // Função para atualizar a pontuação na tela (para time 1 com flip sincronizado)
     function updateScore(team, newScore, animation) {
-        const scoreElement = team === 1 ? score1 : score2;
-        scores[`team${team}`] = newScore;
-        scoreElement.textContent = newScore;
-
-        // Aplicar animação
-        if (animation) {
-            scoreElement.classList.remove('increase', 'decrease');
-            void scoreElement.offsetWidth; // Trigger reflow
-            scoreElement.classList.add(animation);
-
-            // Remover classe de animação após a animação terminar
+        if (team === 1) {
+            const scoreElements = document.querySelectorAll('.score1');
+            // Flip primeiro
+            animateCardFlip('team1');
+            // Só troca o número após 250ms (meio do flip)
             setTimeout(() => {
-                scoreElement.classList.remove(animation);
-            }, 500);
+                scores.team1 = newScore;
+                scoreElements.forEach(el => el.textContent = newScore);
+            }, 250);
+        } else {
+            // Time 2 (mantém como estava)
+            scores.team2 = newScore;
+            score2.textContent = newScore;
         }
 
         // Verificar vitória
@@ -149,10 +155,16 @@ document.addEventListener('DOMContentLoaded', function () {
         victories[`team${winningTeam}`]++;
         updateVictoriesDisplay();
 
-        // Zerar pontos
+        // Trocar o naipe da carta do time vencedor
+        const card = document.querySelector(`#team${winningTeam} .card`);
+        card.classList.remove('diamond', 'spade', 'heart', 'club');
+        naipeIndex[`team${winningTeam}`] = (naipeIndex[`team${winningTeam}`] + 1) % naipes.length;
+        card.classList.add(naipes[naipeIndex[`team${winningTeam}`]]);
+
+        // Zerar pontos corretamente
         scores.team1 = 0;
         scores.team2 = 0;
-        score1.textContent = '0';
+        document.querySelectorAll('.score1').forEach(el => el.textContent = '0');
         score2.textContent = '0';
     }
 
@@ -198,6 +210,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Função para animar o flip do cartão
+    function animateCardFlip(teamId) {
+        const card = document.querySelector(`#${teamId} .card`);
+        card.classList.add('flip');
+        setTimeout(() => {
+            card.classList.remove('flip');
+        }, 500); // tempo igual ao transition do CSS
+    }
+
     // Event Listeners
     // Aumentar pontos
     document.querySelectorAll('.increase-btn').forEach(btn => {
@@ -216,6 +237,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     trucoStatus1.textContent = '';
                     trucoStatus2.textContent = '';
                 }
+                // Animar flip do cartão
+                animateCardFlip(`team${team}`);
             }
         });
     });
@@ -237,7 +260,9 @@ document.addEventListener('DOMContentLoaded', function () {
     resetPointsBtn.addEventListener('click', function () {
         scores.team1 = 0;
         scores.team2 = 0;
-        score1.textContent = '0';
+        // Atualiza todos os elementos de pontuação do time 1
+        document.querySelectorAll('.score1').forEach(el => el.textContent = '0');
+        // Atualiza o time 2 normalmente
         score2.textContent = '0';
         // Atualizar destaque
         highlightActiveTeam();
@@ -248,6 +273,13 @@ document.addEventListener('DOMContentLoaded', function () {
         victories.team1 = 0;
         victories.team2 = 0;
         updateVictoriesDisplay();
+        // Resetar naipes das cartas
+        naipeIndex.team1 = 0;
+        naipeIndex.team2 = 0;
+        document.querySelector('#team1 .card').classList.remove('spade', 'heart', 'club');
+        document.querySelector('#team1 .card').classList.add('diamond');
+        document.querySelector('#team2 .card').classList.remove('spade', 'heart', 'club');
+        document.querySelector('#team2 .card').classList.add('diamond');
     });
 
     // Ícones de edição
