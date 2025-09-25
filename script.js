@@ -25,14 +25,20 @@ document.addEventListener('DOMContentLoaded', function () {
     let trucoIndex = 0;
     const trucoValues = [3, 6, 9, 12];
     let valorMarcador = 1;
+    let valorMarcadorAnterior = 1; // Novo: guarda o valor anterior do marcador
 
-    // Utilitários
     function atualizarMarcadores() {
         document.querySelectorAll('.increase-btn').forEach(btn => {
             btn.textContent = `+${valorMarcador}`;
         });
         // Mostrar botão "Voltar ao 1" se truco estiver em 12
-        resetTrucoBtn.style.display = (trucoAtivo && valorMarcador === 12) ? 'inline-block' : 'none';
+        if (trucoAtivo && valorMarcador === 12) {
+            resetTrucoBtn.style.display = 'inline-block';
+            mainTrucoBtn.style.display = 'none'; // esconde botão Truco
+        } else {
+            resetTrucoBtn.style.display = 'none';
+            mainTrucoBtn.style.display = 'inline-block'; // mostra botão Truco normalmente
+        }
     }
 
     function atualizarPlacar() {
@@ -93,8 +99,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     mostrarVitoria(team);
                 }
                 atualizarPlacar();
-                if (trucoAtivo) resetarRodada();
-            }, 500); // Atualiza após o flip
+
+                // Se o marcador não for 1, volta para 1 após adicionar pontos (caso de "correr")
+                if (valorMarcador !== 1) {
+                    valorMarcador = 1;
+                    atualizarMarcadores();
+                }
+            }, 500);
         });
     });
 
@@ -115,6 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!trucoAtivo) {
             trucoAtivo = true;
             trucoIndex = 0;
+            valorMarcadorAnterior = valorMarcador; // Salva valor anterior
             valorMarcador = trucoValues[trucoIndex];
             atualizarMarcadores();
             mainTrucoBtn.textContent = trucoValues[trucoIndex + 1] || 'Truco';
@@ -123,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
             trucoStatus2.textContent = 'Rodada de Truco!';
         } else if (trucoIndex < trucoValues.length - 1) {
             trucoIndex++;
+            valorMarcadorAnterior = valorMarcador; // Salva valor anterior
             valorMarcador = trucoValues[trucoIndex];
             mainTrucoBtn.textContent = trucoValues[trucoIndex + 1] || trucoValues[trucoIndex];
             atualizarMarcadores();
@@ -141,13 +154,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     runBtn.addEventListener('click', function () {
-        scores.team2 += trucoIndex > 0 ? trucoValues[trucoIndex - 1] : 1;
-        if (scores.team2 >= 12) {
-            scores.team2 = 12;
-            mostrarVitoria('team2');
-        }
-        atualizarPlacar();
-        resetarRodada();
+        // O time que corre perde só a rodada, não zera os pontos
+        trucoAtivo = false;
+        trucoIndex = 0;
+        // Ao correr, o adversário deve ganhar o valor anterior do marcador
+        valorMarcador = valorMarcadorAnterior;
+        atualizarMarcadores();
+        mainTrucoBtn.textContent = 'Truco';
+        runBtn.style.display = 'none';
+        trucoStatus1.textContent = '';
+        trucoStatus2.textContent = '';
     });
 
     // Vitória

@@ -193,9 +193,6 @@ input[type=checkbox]:checked~.back {
     transition: transform 0.5s;
 }
 
-/* ...existing code... */
-
-/* Remova ou sobrescreva o conteúdo do naipe principal */
 .suit.main:after {
     content: none !important;
 }
