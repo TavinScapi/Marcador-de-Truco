@@ -24,9 +24,9 @@ body {
 
 .card {
     display: block;
-    width: 150px;
-    height: 200px;
-    margin: 12px;
+    width: 100px;
+    height: 150px;
+    margin: 6px;
     position: relative;
 }
 
@@ -57,7 +57,7 @@ body {
 
 .front {
     background-color: #fff;
-    font-size: 24px;
+    font-size: 16px;
 }
 
 input[type=checkbox] {

@@ -21,31 +21,31 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    text-align: center;
 }
 
 header {
     text-align: center;
-    margin-bottom: 10px;
 }
 
-h1 {
-    font-size: 2.2rem;
+.container h1 {
+    font-size: 35px;
     margin-bottom: 5px;
     color: #f1c40f;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.subtitle {
-    font-size: 1rem;
+.container .subtitle {
+    font-size: 15px;
     opacity: 0.8;
 }
 
-.teams-container {
+.container .teams-container {
     display: flex;
     gap: 15px;
 }
 
-.team {
+.container .team {
     flex: 1;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
@@ -55,8 +55,8 @@ h1 {
     align-items: center;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s;
-    height: 450px;
-    width: 100px;
+    height: 400px;
+    width: 100%;
 }
 
 .team.active {
@@ -174,10 +174,12 @@ button {
     color: white;
 }
 
-.truco-btn {
+.container .truco-btn {
     background: #f1c40f;
     color: #2c3e50;
     font-weight: bold;
+    margin-bottom: -10px;
+    margin-top: -10px;
 }
 
 button:hover {
@@ -189,10 +191,9 @@ button:active {
     transform: translateY(0);
 }
 
-.reset-container {
+.container .reset-container {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
 }
 
 .reset-btn {
