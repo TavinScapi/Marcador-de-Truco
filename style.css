@@ -31,7 +31,12 @@ header {
     font-size: 35px;
     margin-bottom: 5px;
     color: #f1c40f;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.score-span {
+    font-size: 35px;
+    margin-bottom: 5px;
+    color: #3DA13D;
 }
 
 .container .subtitle {
@@ -315,15 +320,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-/* Título */
-h1 {
-    font-size: 2.8rem;
-    margin-top: 20px;
-    color: #d4af37;
-    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
-    font-weight: bold;
 }
 
 .subtitle {
