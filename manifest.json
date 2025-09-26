@@ -11,13 +11,13 @@
     "orientation": "any",
     "icons": [
         {
-            "src": "/icons/icon-512.png",
+            "src": "images/android/android-launchericon-512-512.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
         },
         {
-            "src": "/icons/icon-192.png",
+            "src": "images/android/android-launchericon-192-192.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any"
@@ -31,7 +31,6 @@
             "description": "Tela inicial do marcador de pontos"
         }
     ],
-    "related_applications": [],
     "prefer_related_applications": false,
     "shortcuts": [
         {
@@ -39,5 +38,6 @@
             "url": "/nova-partida",
             "description": "Começar uma nova contagem de pontos"
         }
-    ]
+    ],
+    "id": "truuucoscore"
 }
