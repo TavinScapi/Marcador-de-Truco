@@ -268,12 +268,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     let deferredPrompt;
+    const pwaBanner = document.getElementById("pwaBanner");
     const installBtn = document.getElementById("installBtn");
 
     window.addEventListener("beforeinstallprompt", (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        installBtn.style.display = "block"; // mostra botão
+        pwaBanner.style.display = "flex"; // mostra o banner
     });
 
     installBtn.addEventListener("click", async () => {
@@ -282,12 +283,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const { outcome } = await deferredPrompt.userChoice;
         console.log(`Usuário escolheu: ${outcome}`);
         deferredPrompt = null;
-        installBtn.style.display = "none"; // esconde depois da escolha
+        pwaBanner.style.display = "none"; // esconde após instalação
     });
 
     window.addEventListener("appinstalled", () => {
         console.log("✅ PWA instalado!");
-        installBtn.style.display = "none";
+        pwaBanner.style.display = "none";
     });
 
 });
