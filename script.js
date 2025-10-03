@@ -224,4 +224,33 @@ document.addEventListener('DOMContentLoaded', function () {
     atualizarMarcadores();
     atualizarPlacar();
     atualizarVitorias();
+
+    let wakeLock = null;
+
+    async function ativarWakeLock() {
+        try {
+            wakeLock = await navigator.wakeLock.request("screen");
+            console.log("🔒 Wake Lock ativado: tela não vai apagar!");
+        } catch (err) {
+            console.error("❌ Erro ao ativar Wake Lock:", err);
+        }
+    }
+
+    function liberarWakeLock() {
+        if (wakeLock) {
+            wakeLock.release();
+            wakeLock = null;
+            console.log("🔓 Wake Lock liberado: tela pode apagar.");
+        }
+    }
+
+    // Ativa ao carregar a página
+    document.addEventListener("DOMContentLoaded", ativarWakeLock);
+
+    // Se o usuário mudar de aba/janela, precisamos reativar
+    document.addEventListener("visibilitychange", () => {
+        if (wakeLock !== null && document.visibilityState === "visible") {
+            ativarWakeLock();
+        }
+    });
 });
