@@ -91,7 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function () {
             if (isVictoryModalOpen()) return;
             const team = this.closest('.team').id === 'team1' ? 'team1' : 'team2';
-            flipCard(team); // flip ao adicionar ponto
+            flipCard(team);
+
             setTimeout(() => {
                 scores[team] += valorMarcador;
                 if (scores[team] >= 12) {
@@ -100,10 +101,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 atualizarPlacar();
 
-                // Se o marcador não for 1, volta para 1 após adicionar pontos (caso de "correr")
-                if (valorMarcador !== 1) {
+                // Se foi uma rodada de truco, resetar os botões
+                if (trucoAtivo) {
+                    trucoAtivo = false;
+                    trucoIndex = 0;
                     valorMarcador = 1;
                     atualizarMarcadores();
+                    mainTrucoBtn.textContent = 'Truco';
+                    runBtn.style.display = 'none';
+                    trucoStatus1.textContent = '';
+                    trucoStatus2.textContent = '';
                 }
             }, 500);
         });
@@ -253,4 +260,43 @@ document.addEventListener('DOMContentLoaded', function () {
             ativarWakeLock();
         }
     });
+
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock("portrait").catch(err => {
+            console.warn("Não foi possível travar orientação:", err);
+        });
+    }
+
+    let deferredPrompt;
+    const installBtn = document.getElementById("installBtn");
+
+    // Captura o evento antes da instalação
+    window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault(); // Impede o prompt automático
+        deferredPrompt = e; // Salva o evento para usar depois
+        installBtn.style.display = "block"; // Mostra o botão
+    });
+
+    // Ação do botão
+    installBtn.addEventListener("click", async () => {
+        if (!deferredPrompt) return;
+
+        // Mostra o prompt de instalação
+        deferredPrompt.prompt();
+
+        // Espera a resposta do usuário
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`Usuário escolheu: ${outcome}`);
+
+        // Se instalou ou dispensou, limpa
+        deferredPrompt = null;
+        installBtn.style.display = "none";
+    });
+
+    // Opcional: quando já estiver instalado, esconde o botão
+    window.addEventListener("appinstalled", () => {
+        console.log("✅ PWA instalado!");
+        installBtn.style.display = "none";
+    });
+
 });
