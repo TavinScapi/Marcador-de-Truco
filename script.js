@@ -270,30 +270,21 @@ document.addEventListener('DOMContentLoaded', function () {
     let deferredPrompt;
     const installBtn = document.getElementById("installBtn");
 
-    // Captura o evento antes da instalação
     window.addEventListener("beforeinstallprompt", (e) => {
-        e.preventDefault(); // Impede o prompt automático
-        deferredPrompt = e; // Salva o evento para usar depois
-        installBtn.style.display = "block"; // Mostra o botão
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.style.display = "block"; // mostra botão
     });
 
-    // Ação do botão
     installBtn.addEventListener("click", async () => {
         if (!deferredPrompt) return;
-
-        // Mostra o prompt de instalação
         deferredPrompt.prompt();
-
-        // Espera a resposta do usuário
         const { outcome } = await deferredPrompt.userChoice;
         console.log(`Usuário escolheu: ${outcome}`);
-
-        // Se instalou ou dispensou, limpa
         deferredPrompt = null;
-        installBtn.style.display = "none";
+        installBtn.style.display = "none"; // esconde depois da escolha
     });
 
-    // Opcional: quando já estiver instalado, esconde o botão
     window.addEventListener("appinstalled", () => {
         console.log("✅ PWA instalado!");
         installBtn.style.display = "none";
