@@ -44,21 +44,36 @@ body {
 }
 
 .back {
-    border: 6px solid #fff;
-    background: conic-gradient(var(--darkBg) 25%,
-            var(--lightBg) 25%,
-            var(--lightBg) 50%,
-            var(--darkBg) 50%,
-            var(--darkBg) 75%,
-            var(--lightBg) 75%);
-    background-size: 20px 20px;
+    border: 3px solid #4A3D2D;
+    /* borda vermelha do verso */
+    border-radius: 12px;
+    /* cantos arredondados */
+    background-image: url('image/LOGO.png');
+    /* imagem do verso */
+    background-size: 120% 121%;
+    /* garante que a imagem ocupe toda a área */
+    background-position: center;
+    background-repeat: no-repeat;
     transform: rotateY(-180deg);
+    filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.3));
+    /* sombra leve */
 }
 
 .front {
-    background-color: #fff;
+    border: 3px solid #4A3D2D;
+    border-radius: 12px;
+    background-image: url('image/front-card.png');
+    /* imagem da frente da carta */
+    background-size: 120% 120%;
+    /* preenche perfeitamente o espaço */
+    background-position: center;
+    background-repeat: no-repeat;
     font-size: 16px;
+    transform: rotateY(0deg);
+    filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.3));
 }
+
+
 
 input[type=checkbox] {
     display: none;
@@ -115,13 +130,13 @@ input[type=checkbox]:checked~.back {
 }
 
 .num-box.top {
-    top: 10px;
-    left: 10px;
+    top: 5px;
+    left: 5px;
 }
 
 .num-box.bottom {
-    bottom: 10px;
-    right: 10px;
+    bottom: 5px;
+    right: 5px;
     transform: rotate(180deg);
 }
 
@@ -133,7 +148,7 @@ input[type=checkbox]:checked~.back {
 
 .suit.main {
     position: absolute;
-    top: 50%;
+    top: 47%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 5em;
