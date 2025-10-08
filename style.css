@@ -6,12 +6,14 @@
 }
 
 body {
-    color: #fff;
-    min-height: 100vh;
+    background: radial-gradient(circle at center, #6e6161 0%, #35241a 100%);
+    font-family: 'Georgia', serif;
+    color: #f8f3e7;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
 }
 
 .container {
@@ -28,15 +30,29 @@ header {
 }
 
 .container h1 {
-    font-size: 35px;
-    margin-bottom: 5px;
-    color: #f1c40f;
+    font-size: 70px;
+    font-family: 'Bangers', cursive;
+    color: #F1C40F;
+    transform: rotate(-3deg);
+    -webkit-text-stroke: 2px #2B1B0E;
+    text-shadow:
+        2px 2px #2B1B0E,
+        3px 3px #2B1B0E,
+        4px 4px #2B1B0E,
+        5px 5px #2B1B0E,
+        6px 6px #2B1B0E;
 }
 
-.score-span {
-    font-size: 35px;
-    margin-bottom: 5px;
+.container h1 span {
     color: #3DA13D;
+    font-family: 'Bangers', cursive;
+    -webkit-text-stroke: 2px #2B1B0E;
+    text-shadow:
+        2px 2px #2B1B0E,
+        3px 3px #2B1B0E,
+        4px 4px #2B1B0E,
+        5px 5px #2B1B0E,
+        6px 6px #2B1B0E;
 }
 
 .container .subtitle {
@@ -282,6 +298,7 @@ button:active {
 
 .truco-status {
     margin-top: 10px;
+    margin-bottom: 10px;
     font-size: 0.9rem;
     opacity: 0.8;
     min-height: 20px;
@@ -308,18 +325,6 @@ footer {
         padding: 8px;
         font-size: 0.9rem;
     }
-}
-
-/* Fundo geral */
-body {
-    background: radial-gradient(circle at center, #3c2f2f 0%, #1e130c 100%);
-    font-family: 'Georgia', serif;
-    color: #f8f3e7;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 .subtitle {

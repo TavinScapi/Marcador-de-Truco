@@ -4,253 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartas de Baralho Animadas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap" rel="stylesheet">
+    <title>Truuuco! 3D</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        :root {
-            --darkBg: #ffcc33;
-            --lightBg: #fff3ce;
-            --darkRed: #e22929;
-            --lightRed: #ffd0d0;
-            --darkBlack: #000;
-            --lightBlack: #777;
-        }
-
         body {
-            font-family: 'Syne Mono', monospace;
-            background-color: #f5f5f5;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .instructions {
-            margin-bottom: 20px;
-            text-align: center;
-            color: #666;
-            max-width: 600px;
-        }
-
-        /* card layout */
-        .cards {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-wrap: wrap;
-            margin: 24px auto;
-            perspective: 1000px;
-            /* 3d flip */
-            max-width: 800px;
+            background: #d6c7a1;
+            font-family: 'Bangers', cursive;
         }
 
-        .card {
-            display: block;
-            width: 150px;
-            height: 200px;
-            margin: 12px;
-            position: relative;
-            font-family: 'Syne Mono', monospace;
-            cursor: pointer;
+        .texto3d {
+            font-size: 6em;
+            color: #F1C40F; /* amarelo */
+            transform: rotate(-6deg);
+            letter-spacing: -2px;
+            -webkit-text-stroke: 2px #2B1B0E;
+            text-shadow:
+                2px 2px #2B1B0E,
+                3px 3px #2B1B0E,
+                4px 4px #2B1B0E,
+                5px 5px #2B1B0E,
+                6px 6px #2B1B0E;
         }
 
-        .front,
-        .back {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 0 5px silver);
-            border-radius: 12px;
-            backface-visibility: hidden;
-            transition: all 0.5s;
-        }
-
-        /* back */
-        .back {
-            border: 6px solid #4A3D2D;
-            /* borda vermelha do verso */
-            border-radius: 12px;
-            /* cantos arredondados */
-            background-image: url('LOGO.png');
-            /* imagem do verso */
-            background-size: 120% 121%;
-            /* garante que a imagem ocupe toda a área */
-            background-position: center;
-            background-repeat: no-repeat;
-            transform: rotateY(-180deg);
-            filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.3));
-            /* sombra leve */
-        }
-
-
-
-        /* front with suit */
-        .front {
-            background-color: #fff;
-            font-size: 24px;
-        }
-
-        input[type=checkbox] {
-            display: none;
-        }
-
-        input[type=checkbox]:checked~.front {
-            transform: rotateY(180deg);
-        }
-
-        input[type=checkbox]:checked~.back {
-            transform: rotateY(0deg);
-        }
-
-        /* suits: black */
-        .spade,
-        .club {
-            color: var(--darkBlack);
-        }
-
-        .spade .suit.main,
-        .club .suit.main {
-            background-image: linear-gradient(135deg, var(--darkBlack) 50%, var(--lightBlack) 50%);
-        }
-
-        /* suits: red */
-        .heart,
-        .diamond {
-            color: var(--darkRed);
-        }
-
-        .heart .suit.main,
-        .diamond .suit.main {
-            background-image: linear-gradient(135deg, var(--darkRed) 50%, var(--lightRed) 50%);
-        }
-
-        /* suits unicode */
-        .spade .suit:after {
-            content: '\2660';
-        }
-
-        .heart .suit:after {
-            content: '\2665';
-        }
-
-        .diamond .suit:after {
-            content: '\2666';
-        }
-
-        .club .suit:after {
-            content: '\2663';
-        }
-
-        /* number */
-        .num-box {
-            text-align: center;
-            position: absolute;
-            width: 20px;
-        }
-
-        .num-box.top {
-            top: 10px;
-            left: 10px;
-        }
-
-        .num-box.bottom {
-            bottom: 10px;
-            right: 10px;
-            transform: rotate(180deg);
-        }
-
-        .num-box.suit:after {
-            display: block;
-            font-size: 1.2em;
-            margin-top: -10px;
-        }
-
-        /* main suit */
-        .main {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 5em;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-        }
-
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            color: #888;
-            font-size: 0.9em;
+        .texto3d span {
+            color: #3DA13D; /* verde */
+            -webkit-text-stroke: 2px #2B1B0E;
+            text-shadow:
+                2px 2px #2B1B0E,
+                3px 3px #2B1B0E,
+                4px 4px #2B1B0E,
+                5px 5px #2B1B0E,
+                6px 6px #2B1B0E;
         }
     </style>
 </head>
 
 <body>
-    <h1>Cartas de Baralho Animadas</h1>
-
-    <div class="instructions">
-        <p>Clique em qualquer carta para virá-la e ver seu verso.</p>
-    </div>
-
-    <div class="cards">
-        <label class="card spade" for="spade">
-            <input type="checkbox" id="spade">
-            <div class="back"></div>
-            <div class="front">
-                <div class="num-box top suit">A</div>
-                <div class="num-box bottom suit">A</div>
-                <div class="suit main"></div>
-            </div>
-        </label>
-
-        <label class="card heart" for="heart">
-            <input type="checkbox" id="heart">
-            <div class="back"></div>
-            <div class="front">
-                <div class="num-box top suit">A</div>
-                <div class="num-box bottom suit">A</div>
-                <div class="suit main"></div>
-            </div>
-        </label>
-
-        <label class="card diamond" for="diamond">
-            <input type="checkbox" id="diamond">
-            <div class="back"></div>
-            <div class="front">
-                <div class="num-box top suit">A</div>
-                <div class="num-box bottom suit">A</div>
-                <div class="suit main"></div>
-            </div>
-        </label>
-
-        <label class="card club" for="club">
-            <input type="checkbox" id="club">
-            <div class="back"></div>
-            <div class="front">
-                <div class="num-box top suit">A</div>
-                <div class="num-box bottom suit">A</div>
-                <div class="suit main"></div>
-            </div>
-        </label>
-    </div>
-
-    <div class="footer">
-        <p>Clique novamente para virar a carta de volta</p>
-    </div>
+    <div class="texto3d">TRUUUCO! <span>SCORE</span></div>
 </body>
 
 </html>
