@@ -270,11 +270,12 @@ document.addEventListener('DOMContentLoaded', function () {
     let deferredPrompt;
     const pwaBanner = document.getElementById("pwaBanner");
     const installBtn = document.getElementById("installBtn");
+    const recusarBtn = document.querySelector(".muted"); // 👈 novo
 
     window.addEventListener("beforeinstallprompt", (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        pwaBanner.style.display = "flex"; // mostra o banner
+        pwaBanner.style.display = "flex";
     });
 
     installBtn.addEventListener("click", async () => {
@@ -283,12 +284,18 @@ document.addEventListener('DOMContentLoaded', function () {
         const { outcome } = await deferredPrompt.userChoice;
         console.log(`Usuário escolheu: ${outcome}`);
         deferredPrompt = null;
-        pwaBanner.style.display = "none"; // esconde após instalação
+        pwaBanner.style.display = "none";
+    });
+
+    // 👇 novo trecho
+    recusarBtn.addEventListener("click", () => {
+        pwaBanner.style.display = "none";
+        deferredPrompt = null;
+        console.log("Usuário recusou instalar o app.");
     });
 
     window.addEventListener("appinstalled", () => {
         console.log("✅ PWA instalado!");
         pwaBanner.style.display = "none";
     });
-
 });
