@@ -48,7 +48,7 @@ body {
     /* borda vermelha do verso */
     border-radius: 12px;
     /* cantos arredondados */
-    background-image: url('image/LOGO.png');
+    background-image: url('image/back-card.png');
     /* imagem do verso */
     background-size: 120% 121%;
     /* garante que a imagem ocupe toda a área */
