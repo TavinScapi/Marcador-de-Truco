@@ -16,6 +16,15 @@ body {
     align-items: center;
 }
 
+body {
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    /* "Fixar" o body na tela */
+    overflow: hidden;
+}
+
 .container {
     max-width: 500px;
     width: 100%;
