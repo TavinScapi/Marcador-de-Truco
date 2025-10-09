@@ -24,8 +24,8 @@ body {
 
 .card {
     display: block;
-    width: 100px;
-    height: 150px;
+    width: 120px;
+    height: 100%;
     margin: 6px;
     position: relative;
 }
