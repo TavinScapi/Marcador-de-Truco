@@ -251,8 +251,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Ativa ao carregar a página
-    document.addEventListener("DOMContentLoaded", ativarWakeLock);
+    document.addEventListener("click", async function inicializarWakeLock() {
+        await ativarWakeLock();
+        // Remove o listener depois de ativar
+        document.removeEventListener("click", inicializarWakeLock);
+    });
 
     // Se o usuário mudar de aba/janela, precisamos reativar
     document.addEventListener("visibilitychange", () => {
